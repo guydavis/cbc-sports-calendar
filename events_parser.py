@@ -1,3 +1,4 @@
+import json
 import requests
 import traceback
 
@@ -56,8 +57,13 @@ def load_events(sport):
 def load_all_events():
     events = []
     for sport in SPORTS:
-        events.extend(load_events(sport))
+        sport_events = load_events(sport) 
+        print("Adding {0} events for {1}.".format(len(sport_events), sport))
+        events.extend(sport_events)
     return events
 
 if __name__ == '__main__': # testing only
-    print(load_all_events()) # For debugging
+    events = load_all_events()
+    pretty_json_string = json.dumps(events, indent=4, sort_keys=True)
+    print(pretty_json_string)
+    print("Parsed {0} events.".format(len(events)))
