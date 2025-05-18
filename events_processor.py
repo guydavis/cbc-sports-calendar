@@ -40,7 +40,7 @@ def process_events(events): # 'events' is a list of raw event dicts from events_
 
         # Check for duplicates based on the raw identifier
         if unique_identifier in seen_event_identifiers:
-            print(f"  [Event {i+1}/{len(events)}] Skipping duplicate event: {unique_identifier}")
+            #print(f"  [Event {i+1}/{len(events)}] Skipping duplicate event: {unique_identifier}")
             skipped_duplicates += 1
             continue
         else:
