@@ -3,6 +3,7 @@ import events_processor
 import os.path
 
 from google.auth.transport.requests import Request
+from google.auth.exceptions import RefreshError
 from google.oauth2.credentials import Credentials
 from google_auth_oauthlib.flow import InstalledAppFlow
 from googleapiclient.discovery import build
@@ -102,7 +103,11 @@ def add_events_to_calendar(service, events_to_add):
 if __name__ == '__main__':
     processed_events = events_processor.process_events(events_parser.load_all_events())
     if processed_events:
-        service = get_calendar_service()
+        try:
+            service = get_calendar_service()
+        except RefreshError as ex:
+            os.remove('token.json')  # Remove stale auth token and retry
+            service = get_calendar_service()
         add_events_to_calendar(service, processed_events)
         print("Created {0} events.".format(len(processed_events)))
     else:
