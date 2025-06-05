@@ -3,6 +3,7 @@ import requests
 import traceback
 
 from bs4 import BeautifulSoup
+from datetime import datetime
 
 URL = "https://www.cbc.ca/sports/streaming-schedule?sport="
 SPORTS = ['Volleyball', 'Volleyball-Beach'] # Check CBC page, drop-down chooser, to get the list of Sports
@@ -27,6 +28,8 @@ def load_events(sport):
             traceback.print_exc()
         try:
             start_date = event.find('th', attrs={'data-cy': 'status'}).text.strip() 
+            if start_date == "Today":
+                start_date = datetime.now().strftime("%a %b %d")
             #print(start_date)
         except:
             print("Failed on start_date with {0}".format(event))
@@ -35,13 +38,13 @@ def load_events(sport):
             start = event.find('td', attrs={'data-cy': 'startTime'})
             #print(start)
         except:
-            print("Failed on start with {0}".format(start))
+            print("Failed on start with {0}".format(event))
             continue
         try:
             start_time = start.find(string=True, recursive=False)
             #print(start_time)
         except:
-            print("Failed on time with {0}".format(start))
+            print("Failed on time with {0}".format(event))
         try:
             title = event.find('td', attrs={'data-cy': 'title'}).text.strip()
             #print(title)
