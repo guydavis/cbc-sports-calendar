@@ -91,7 +91,7 @@ def process_events(events): # 'events' is a list of raw event dicts from events_
     return processed_events
 
 if __name__ == '__main__': # testing only
-    events = process_events(events_parser.load_all_events())
+    events = process_events(events_parser.load_events())
     pretty_json_string = json.dumps(events, indent=4, sort_keys=True)
     print(pretty_json_string)
     print("Processed {0} events.".format(len(events)))

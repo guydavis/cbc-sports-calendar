@@ -5,12 +5,12 @@ import traceback
 from bs4 import BeautifulSoup
 from datetime import datetime
 
-URL = "https://www.cbc.ca/sports/streaming-schedule?sport="
-SPORTS = ['Volleyball', 'Volleyball-Beach'] # Check CBC page, drop-down chooser, to get the list of Sports
+URL = "https://www.cbc.ca/sports/streaming-schedule"
+SPORTS = ['Rugby', 'Volleyball', 'Beach'] # Keywords to search for in event title
 headers = {'User-Agent': 'Mozilla/5.0'} # Pretend to be a browser
 
-def load_events(sport):
-    response = requests.get("{0}{1}".format(URL, sport), headers=headers)
+def load_events():
+    response = requests.get(URL, headers=headers)
     response.raise_for_status() # Raise an error for bad status codes (4xx or 5xx)
     soup = BeautifulSoup(response.text, 'html.parser')
 
@@ -50,23 +50,18 @@ def load_events(sport):
             #print(title)
         except: 
             print("Failed on title {0}".format(event))
-        events.append({
-            'title': title,
-            'date_str': start_date,
-            'time_str': start_time,
-        })
-    return events
-
-def load_all_events():
-    events = []
-    for sport in SPORTS:
-        sport_events = load_events(sport) 
-        print("Adding {0} events for {1}.".format(len(sport_events), sport))
-        events.extend(sport_events)
+        for sport in SPORTS:
+            if sport.lower() in title.lower():
+                events.append({
+                    'title': title,
+                    'date_str': start_date,
+                    'time_str': start_time,
+                })
+                break # Out of for loop
     return events
 
 if __name__ == '__main__': # testing only
-    events = load_all_events()
+    events = load_events()
     pretty_json_string = json.dumps(events, indent=4, sort_keys=True)
     print(pretty_json_string)
     print("Parsed {0} events.".format(len(events)))

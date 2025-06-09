@@ -101,7 +101,7 @@ def add_events_to_calendar(service, events_to_add):
     print(f"Successfully added {added_count} new events.")
 
 if __name__ == '__main__':
-    processed_events = events_processor.process_events(events_parser.load_all_events())
+    processed_events = events_processor.process_events(events_parser.load_events())
     if processed_events:
         try:
             service = get_calendar_service()
